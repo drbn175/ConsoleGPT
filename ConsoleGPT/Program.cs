@@ -16,14 +16,21 @@ var msg = Console.ReadLine();
 
 do
 {
-    var results = await chatOpenAI.SendChatMessage(msg);
+    if(msg != null || !string.IsNullOrEmpty(msg)) {
+        var results = await chatOpenAI.SendChatMessage(msg);
 
-    foreach (var item in results)
-    {
-        Console.WriteLine($"{item.Role}: {item.Content}");
+        foreach (var item in results)
+        {
+            Console.WriteLine($"{item.Role}: {item.Content}");
+        }
+
+        Console.WriteLine("Next Prompt:");
+        msg = Console.ReadLine();
     }
-
-    Console.WriteLine("Next Prompt:");
-    msg = Console.ReadLine();
+    else
+    {
+        Console.WriteLine("Invalid prompt! Try again");
+        Console.WriteLine("Next Prompt:");
+    }
 
 } while (msg != "bye");
