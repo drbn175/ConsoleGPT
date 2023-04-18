@@ -38,7 +38,14 @@ while (msg != "bye")
         using (var spinner = new Spinner(0, Console.CursorTop))
         {
             spinner.Start();
-            var results = await chatOpenAI.SendChatMessage(msg);
+            Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[] results = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[lines];
+            try
+            {
+              results = await chatOpenAI.SendChatMessage(msg);
+            }catch(Exception ex)
+            {
+                results[0].Content = ex.Message;
+            }
             spinner.Stop();
 
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -46,7 +53,9 @@ while (msg != "bye")
             {
                 Console.WriteLine($"█>{item.Role}:");
                 Console.WriteLine(item.Content);
-                lines += item.Content.Split('\n').Length + item.Content.Split('\n').Where(t => t.Length > Console.WindowWidth).Count();
+                lines += item.Content.Split('\n').Length 
+                    + (item.Content.Split('\n').Where(t => t.Length > Console.WindowWidth).Count() > 0 ? item.Content.Split('\n').Where(t => t.Length > Console.WindowWidth).Count() : 1) 
+                    + 1;
             }
         }
 
