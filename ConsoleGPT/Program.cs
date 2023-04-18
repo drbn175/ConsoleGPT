@@ -9,7 +9,7 @@ IConfiguration configuration = configurationBuilder.AddUserSecrets<Program>().Bu
 Console.WriteLine("Hello, Welcome to consoleGPT!");
 var model = "gpt-3.5-turbo";
 var temperature = 0.2;
-var maxTokens = 800;
+var maxTokens = 2000;
 
 var openAIConfig = configuration.GetSection("OpenAI");
 IOpenAIProxy chatOpenAI = new OpenAIProxy(
@@ -34,7 +34,7 @@ while (msg != "bye")
 {
     if (msg != null || !string.IsNullOrEmpty(msg))
     {
-        var lines = 1;
+        var lines = 0;
         using (var spinner = new Spinner(0, Console.CursorTop))
         {
             spinner.Start();
@@ -52,10 +52,7 @@ while (msg != "bye")
             foreach (var item in results)
             {
                 Console.WriteLine($"█>{item.Role}:");
-                Console.WriteLine(item.Content);
-                lines += item.Content.Split('\n').Length 
-                    + (item.Content.Split('\n').Where(t => t.Length > Console.WindowWidth).Count() > 0 ? item.Content.Split('\n').Where(t => t.Length > Console.WindowWidth).Count() : 1) 
-                    + 1;
+                lines += WriteLineWordWrap.WriteLine(item.Content) + item.Content.Split('\n').Length;
             }
         }
 
@@ -72,4 +69,6 @@ while (msg != "bye")
     }
 
 };
+
+
 
