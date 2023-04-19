@@ -13,7 +13,7 @@ namespace ConsoleGPT
             var counter = 0;
             string[] lines = paragraph
                 .Replace("\t", new String(' ', tabSize))
-                .Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                .Split(new string[] { "\n" }, StringSplitOptions.None);
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -31,11 +31,22 @@ namespace ConsoleGPT
 
                 foreach (string wrap in wrapped)
                 {
-                    Console.WriteLine(wrap);
+                    foreach(char c in wrap)
+                    {
+                        Console.Write(c);
+                        Thread.Sleep(50);
+                    }
+                    Console.WriteLine();
                     counter++;
                 }
 
-                Console.WriteLine(process);
+                foreach (char c in process)
+                {
+                    Console.Write(c);
+                    Thread.Sleep(50);
+                }
+                Console.WriteLine();
+
                 counter++;
             }
             return counter;

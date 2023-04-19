@@ -52,7 +52,7 @@ while (msg != "bye")
             foreach (var item in results)
             {
                 Console.WriteLine($"█>{item.Role}:");
-                lines += WriteLineWordWrap.WriteLine(item.Content) + item.Content.Split('\n').Length;
+                lines += WriteLineWordWrap.WriteLine(item.Content);
             }
         }
 
