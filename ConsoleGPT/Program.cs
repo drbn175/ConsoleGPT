@@ -18,12 +18,15 @@ IOpenAIProxy chatOpenAI = new OpenAIProxy(
     model,
     temperature,
     maxTokens);
+var text2SpeechConfig = configuration.GetSection("Text2Speech");
+
 Console.ForegroundColor = ConsoleColor.Blue;
 Console.WriteLine($"Model: {model}");
 Console.WriteLine($"Temperature: {temperature}");
 Console.WriteLine($"Max tokens: {maxTokens}");
-
-                    
+Console.ForegroundColor = ConsoleColor.Yellow;
+Console.WriteLine("If you want to use text to speech write the neural voice. Refers to https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=tts#prebuilt-neural-voices");
+var voice = Console.ReadLine();
 
 Console.ForegroundColor = ConsoleColor.Gray;
 Console.WriteLine("Start a conversation (To leave write 'bye')");
@@ -41,8 +44,9 @@ while (msg != "bye")
             Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[] results = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[lines];
             try
             {
-              results = await chatOpenAI.SendChatMessage(msg);
-            }catch(Exception ex)
+                results = await chatOpenAI.SendChatMessage(msg);
+            }
+            catch (Exception ex)
             {
                 results[0].Content = ex.Message;
             }
@@ -51,8 +55,17 @@ while (msg != "bye")
             Console.ForegroundColor = ConsoleColor.Yellow;
             foreach (var item in results)
             {
+                Task? task= null;
+                if (!string.IsNullOrEmpty(voice))
+                {
+                    task = Text2Speech.SynthesisToSpeakerAsync(text2SpeechConfig["SubscriptionKey"], text2SpeechConfig["Region"], voice, item.Content);
+                }
                 Console.WriteLine($"█>{item.Role}:");
                 lines += WriteLineWordWrap.WriteLine(item.Content);
+                
+                if(task!= null)
+                    await Task.WhenAll(task);
+
             }
         }
 
