@@ -5,6 +5,7 @@ using System;
 
 ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 IConfiguration configuration = configurationBuilder.AddUserSecrets<Program>().Build();
+IConfiguration appConfig = configurationBuilder.AddJsonFile("appsettings.json").Build();
 
 Console.WriteLine("Hello, Welcome to consoleGPT!");
 var model = "gpt-3.5-turbo";
@@ -19,22 +20,31 @@ IOpenAIProxy chatOpenAI = new OpenAIProxy(
     temperature,
     maxTokens);
 var text2SpeechConfig = configuration.GetSection("Text2Speech");
-
+var voiceConfig = appConfig.GetSection("Text2Speech");
+var audioConfig = appConfig.GetSection("Speech2Text");
+var voice = voiceConfig["Voice"];
 Console.ForegroundColor = ConsoleColor.Blue;
 Console.WriteLine($"Model: {model}");
 Console.WriteLine($"Temperature: {temperature}");
 Console.WriteLine($"Max tokens: {maxTokens}");
+Console.WriteLine($"Voice: {voice}");
 Console.ForegroundColor = ConsoleColor.Yellow;
-Console.WriteLine("If you want to use text to speech write the neural voice. Refers to https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=tts#prebuilt-neural-voices");
-var voice = Console.ReadLine();
+
 
 Console.ForegroundColor = ConsoleColor.Gray;
-Console.WriteLine("Start a conversation (To leave write 'bye')");
+Console.WriteLine("To leave write 'bye'");
+Console.WriteLine("To use speech recognition write 'listen'");
+Console.WriteLine("Start a conversation");
 Console.WriteLine(" █>User:");
 
 var msg = Console.ReadLine();
 while (msg != "bye")
 {
+    if(msg == "listen")
+    {
+        msg = await Speech2Text.RecognizeSpeechAsync(text2SpeechConfig["SubscriptionKey"], text2SpeechConfig["Region"], audioConfig["Voice"]);
+        WriteLineWordWrap.WriteLine(msg);
+    }
     if (msg != null || !string.IsNullOrEmpty(msg))
     {
         var lines = 0;
