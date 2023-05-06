@@ -58,7 +58,8 @@ while (msg != "bye")
             }
             catch (Exception ex)
             {
-                results[0].Content = ex.Message;
+                results = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[1];
+                results[0] = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage { Content = ex.Message, Role = "SYSTEM" };
             }
             spinner.Stop();
 
