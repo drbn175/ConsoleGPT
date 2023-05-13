@@ -14,8 +14,8 @@ var maxTokens = 2000;
 
 var openAIConfig = configuration.GetSection("OpenAI");
 IOpenAIProxy chatOpenAI = new OpenAIProxy(
-    apiKey: openAIConfig["ApiKey"],
-    organizationId: openAIConfig["OrganizationId"],
+    apiKey: openAIConfig["ApiKey"] ?? string.Empty,
+    organizationId: openAIConfig["OrganizationId"] ?? string.Empty,
     model,
     temperature,
     maxTokens);
@@ -42,7 +42,7 @@ while (msg != "bye")
 {
     if(msg == "listen")
     {
-        msg = await Speech2Text.RecognizeSpeechAsync(text2SpeechConfig["SubscriptionKey"], text2SpeechConfig["Region"], audioConfig["Voice"]);
+        msg = await Speech2Text.RecognizeSpeechAsync(text2SpeechConfig["SubscriptionKey"] ?? string.Empty, text2SpeechConfig["Region"] ?? string.Empty, audioConfig["Voice"] ?? string.Empty);
         WriteLineWordWrap.WriteLine(msg);
     }
     if (msg != null || !string.IsNullOrEmpty(msg))
@@ -69,7 +69,7 @@ while (msg != "bye")
                 Task? task= null;
                 if (!string.IsNullOrEmpty(voice))
                 {
-                    task = Text2Speech.SynthesisToSpeakerAsync(text2SpeechConfig["SubscriptionKey"], text2SpeechConfig["Region"], voice, item.Content);
+                    task = Text2Speech.SynthesisToSpeakerAsync(text2SpeechConfig["SubscriptionKey"] ?? string.Empty, text2SpeechConfig["Region"] ?? string.Empty, voice, item.Content);
                 }
                 Console.WriteLine($"█>{item.Role}:");
                 lines += WriteLineWordWrap.WriteLine(item.Content);
