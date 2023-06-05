@@ -48,7 +48,7 @@ namespace ConsoleGPT
 
         private void Draw(char c)
         {
-            Console.SetCursorPosition(left, top);
+            Console.SetCursorPosition(left, top); 
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(c);
         }
