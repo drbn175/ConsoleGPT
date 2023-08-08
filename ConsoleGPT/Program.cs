@@ -8,7 +8,7 @@ IConfiguration configuration = configurationBuilder.AddUserSecrets<Program>().Bu
 IConfiguration appConfig = configurationBuilder.AddJsonFile("appsettings.json").Build();
 
 Console.WriteLine("Hello, Welcome to consoleGPT!");
-var model = "gpt-3.5-turbo";
+var model = "gpt-4";
 var temperature = 0.2;
 var maxTokens = 2000;
 
