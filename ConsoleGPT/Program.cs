@@ -13,6 +13,7 @@ var temperature = new Random().NextDouble();
 var maxTokens = 2000;
 
 var openAIConfig = configuration.GetSection("OpenAI");
+
 var apiKey = openAIConfig["ApiKey"];
 var organizationId = openAIConfig["OrganizationId"];
 if (apiKey != null && organizationId != null)
@@ -47,6 +48,7 @@ if (apiKey != null && organizationId != null)
 
     var msg = Console.ReadLine();
     while (msg != "bye")
+
     {
         if (msg == "listen")
         {
@@ -74,8 +76,10 @@ if (apiKey != null && organizationId != null)
                 }
                 catch (Exception ex)
                 {
+
                     results = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage[1];
                     results[0] = new Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions.ChatCompletionMessage { Content = ex.Message, Role = "SYSTEM" };
+
                 }
                 spinner.Stop();
 
